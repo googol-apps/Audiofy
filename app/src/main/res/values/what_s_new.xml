@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="what_s_new_toast" translatable="false"><b>What\'s New in v3.11.4</b>
+    <string name="what_s_new_toast" translatable="false"><b>What\'s New in v3.11.6</b>
     <font color='grey'>
         \n - Bug fixes and performance improvements
         \n - Added French translation.
