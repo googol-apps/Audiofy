@@ -18,6 +18,7 @@ import androidx.compose.material.icons.outlined.AdsClick
 import androidx.compose.material.icons.outlined.Downloading
 import androidx.compose.material.icons.outlined.GetApp
 import androidx.compose.material.icons.outlined.HotelClass
+import androidx.compose.material.icons.outlined.Store
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
@@ -60,6 +61,8 @@ import com.prime.media.common.dynamicFeatureRequest
 import com.prime.media.common.dynamicModuleName
 import com.prime.media.common.isDynamicFeature
 import com.prime.media.common.isFreemium
+import com.prime.media.common.isInstalledFromPlayStore
+import com.prime.media.common.isPlayStoreAvailable
 import com.prime.media.common.isPurchasable
 import com.prime.media.common.onEachItem
 import com.prime.media.common.richDesc
@@ -794,6 +797,21 @@ class MainActivity :
                 if (savedVersionCode != versionCode) {
                     preferences[KEY_APP_VERSION_CODE] = versionCode
                     showPromoToast(-1, 10_000) // What's new
+                    return@launch
+                }
+                // check if app is installed from market other than playstore.
+                if(!isInstalledFromPlayStore && isPlayStoreAvailable()){
+                    val res = toastHostState.showToast(
+                        resources.getText2(R.string.msg_playstore_encouragement),
+                        priority = Toast.PRIORITY_HIGH,
+                        icon = Icons.Outlined.Store,
+                        action = resources.getString(R.string.get)
+                    )
+                    if (res == Toast.ACTION_PERFORMED)
+                        if (Build.VERSION.SDK_INT >= 28) // ask to install one-player
+                            launchAppStore("com.googol.android.apps.oneplayer")
+                        else
+                            launchAppStore() // else this app.
                     return@launch
                 }
                 // Promotional messages are displayed only after the app has been launched

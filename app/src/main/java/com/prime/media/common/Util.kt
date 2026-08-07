@@ -23,8 +23,11 @@ package com.prime.media.common
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -388,3 +391,39 @@ fun FontFamily(name: String): FontFamily {
 }
 
 val FontFamily.Companion.DancingScriptFontFamily get() = Registry.DancingScriptFontFamily
+
+/**
+ * Extension property to check if the current app
+ * was installed from the official Google Play Store.
+ *
+ * - Uses modern API (getInstallSourceInfo) on Android 11+ (API 30).
+ * - Falls back to deprecated getInstallerPackageName for older devices.
+ * - Returns true only if the installer is Play Store.
+ */
+val Context.isInstalledFromPlayStore: Boolean
+    get() = try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Modern API: richer install source info
+            val sourceInfo = packageManager.getInstallSourceInfo(packageName)
+            sourceInfo.installingPackageName == "com.android.vending"
+        } else {
+            // Legacy API: still works pre‑Android 11
+            val installer = packageManager.getInstallerPackageName(packageName)
+            installer == "com.android.vending" || installer == "com.google.android.feedback"
+        }
+    } catch (e: PackageManager.NameNotFoundException) {
+        // Defensive: if package info lookup fails, assume not Play Store
+        false
+    }
+
+/**
+ * Checks if the device can resolve an intent to open the Play Store.
+ * This indirectly confirms whether Play Store (com.android.vending) is installed.
+ */
+fun Context.isPlayStoreAvailable(): Boolean {
+    val playStoreIntent = Intent(Intent.ACTION_VIEW).apply {
+        data = Uri.parse("market://details?id=$packageName")
+        setPackage("com.android.vending") // Target Play Store explicitly
+    }
+    return playStoreIntent.resolveActivity(packageManager) != null
+}
