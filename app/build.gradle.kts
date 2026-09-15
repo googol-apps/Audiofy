@@ -1,5 +1,6 @@
 import com.android.build.api.dsl.ApplicationDefaultConfig
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.android.build.api.dsl.ApplicationDefaultConfig as Config
 
 plugins {
     alias(libs.plugins.android.application)
@@ -36,13 +37,13 @@ val secrets = arrayOf(
 /**
  * Adds a string BuildConfig field to the project.
  */
-private fun ApplicationDefaultConfig.buildConfigField(name: String, value: String) =
+private fun Config.buildConfigField(name: String, value: String) =
     buildConfigField("String", name, "\"" + value + "\"")
 
 /**
  * Init
  */
-private fun ApplicationDefaultConfig.init() {
+private fun Config.init() {
     // Load secrets into BuildConfig
     // These are passed through env of github.
     secrets.forEach { secret ->
@@ -94,20 +95,38 @@ private fun ApplicationDefaultConfig.init() {
 
 }
 
+///
+//  -------------------------------------------------------------------------------------
+//  APPLICATION CONFIGURATION
+//  -------------------------------------------------------------------------------------
+//  Defines the core identity and compatibility parameters of the application.
+//  This lambda is applied to the [defaultConfig] block within the [android] section.
+private val config: Config.() -> Unit = {
+    versionCode = 1063                                    // Internal version code
+    versionName = "3.11.12"                               // User-facing version name
+    applicationId = "com.prime.player" // Unique app ID
+    minSdk = 21                                         // Minimum supported Android version
+    targetSdk = 37                                      // Target SDK
+    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    vectorDrawables { useSupportLibrary = true }
+    // init different config fields.
+    init()
+}
+
+composeCompiler {
+    //enableStrongSkippingMode = false
+    // TODO - I guess disable these in release builds.
+//        reportsDestination = layout.buildDirectory.dir("compose_compiler")
+//        metricsDestination = layout.buildDirectory.dir("compose_compiler")
+        stabilityConfigurationFiles = listOf(
+            rootProject.layout.projectDirectory.file("stability_config.conf")
+        )
+}
+
 android {
     compileSdk = 36
     namespace = "com.prime.media"
-    defaultConfig {
-        applicationId = "com.prime.player"
-        minSdk = 21
-        targetSdk = 36
-        versionCode = 1062
-        versionName = "3.11.7"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables { useSupportLibrary = true }
-        // init different config fields.
-        init()
-    }
+    defaultConfig(config)
 
     buildTypes {
         // Make sure release is version is optimised.
@@ -136,15 +155,6 @@ android {
     buildFeatures { compose = true; buildConfig = true }
     packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
     dynamicFeatures += setOf(":codex")
-    composeCompiler {
-        //enableStrongSkippingMode = false
-        // TODO - I guess disable these in release builds.
-//        reportsDestination = layout.buildDirectory.dir("compose_compiler")
-//        metricsDestination = layout.buildDirectory.dir("compose_compiler")
-//        stabilityConfigurationFiles = listOf(
-//            rootProject.layout.projectDirectory.file("stability_config.conf")
-//        )
-    }
 }
 
 // Not moving these to libs.version.toml because i think this is redundant.
@@ -174,6 +184,7 @@ dependencies {
     //     internal below dependency and hence this. Remove this in next update.
     implementation("com.google.j2objc:j2objc-annotations:3.1")
 }
+
 
 // TODO: It appears that Material3 components may be leaking into this project, which is intended to support Material2.
 //       Please investigate if this issue is related to the Wavy Slider and resolve it. Once the main issue is fixed,

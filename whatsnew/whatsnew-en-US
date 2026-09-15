@@ -1,3 +1,4 @@
 - Bug fixes and performance improvements.
-- Removed features apps in-app ads popup.
-- Added French Translation.
+- Upgraded target SDK to 37 for enhanced performance and security.
+- Updated core dependencies, Kotlin, and build environment for improved stability.
+- Refined build configuration and optimized player performance.

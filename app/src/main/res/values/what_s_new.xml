@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="what_s_new_toast" translatable="false"><b>What\'s New in v3.11.6</b>
+    <string name="what_s_new_toast" translatable="false"><b>What\'s New in v3.11.12</b>
     <font color='grey'>
-        \n - Bug fixes and performance improvements
-        \n - Added French translation.
-        \n - Modernized player console with fresh visuals and responsive animations.
-        \n - Intuitive video gestures: swipe to seek, double-tap skip, brightness &amp; volume controls.
-        \n - Acrylic background effect with blurred artwork for a sleek look.
-        \n - Sleep timer and playback speed fully implemented with new dialogs.
-        \n - Playing Queue screen added with shuffle, clear, and skip-to-track actions.
-        \n - Official Media3 PlayerView integration replacing custom implementation.
-        \n - "Like" button to favourite tracks, synced with playlists.
-        \n - Improved chronometer and progress handling for unknown durations.
-        \n - Refined layouts with ConstraintLayout and TwoPane support.
+        \n - Bug fixes and performance improvements.
+        \n - Upgraded target SDK to 37 for enhanced performance and security.
+        \n - Updated core dependencies, Kotlin, and build environment for improved stability.
+        \n - Refined build configuration and optimized player performance.
     </font>
 </string>
 
