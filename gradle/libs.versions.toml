@@ -1,6 +1,6 @@
 [versions]
-agp = "9.4.0"
-kotlin = "2.4.20"
+agp = "9.5.0"
+kotlin = "2.4.21"
 compose = "1.8.3"
 media3 = "1.8.0"
 toolkit = "v2.2.5"

@@ -102,8 +102,8 @@ private fun Config.init() {
 //  Defines the core identity and compatibility parameters of the application.
 //  This lambda is applied to the [defaultConfig] block within the [android] section.
 private val config: Config.() -> Unit = {
-    versionCode = 1063                                    // Internal version code
-    versionName = "3.11.12"                               // User-facing version name
+    versionCode = 1064                                    // Internal version code
+    versionName = "3.11.13"                               // User-facing version name
     applicationId = "com.prime.player" // Unique app ID
     minSdk = 21                                         // Minimum supported Android version
     targetSdk = 37                                      // Target SDK
